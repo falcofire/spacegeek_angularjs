@@ -1,0 +1,93 @@
+@CHARSET "ISO-8859-1";
+
+.spacegeek-main {
+}
+
+#mainFeed tr td:nth-child(1) {
+	width:30%;
+}
+
+body { 
+	-moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-attachment: fixed;
+    background-size: contain;
+	padding-top: 50px; 
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+.feedElement {
+	background:#F8F8F8;
+	border-style:solid;
+	border-color:#E7E7E7;
+	opacity: 0.8;
+	padding: 5px;
+}
+
+.imgUrl-btn {
+    white-space: normal;
+}
+
+.inner {
+    margin-left: auto;
+    margin-right: auto; 
+    width: /*whatever width you want*/;
+}
+
+.mediaFilters {
+	padding-bottom: 10px;
+	padding-left: 10px;
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:auto;
+    height:auto;
+    display: table;
+    /* To center horizontally */
+    margin: 0 auto;
+    pointer-events: all;
+}
+
+.modal-dialog{
+    display: table;  
+}
+
+.outer {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.row {
+	padding: 5px;
+}
+
+.topStories {
+	opacity: 0.8;
+}
+
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+}
+
+.vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
+}
