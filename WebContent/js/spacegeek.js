@@ -7,16 +7,36 @@ app.config(function(facebookProvider) {
     facebookProvider.setAppID('282870535397392');
 });
 
-app.controller('FrontpageController', ['$scope', 'facebook', function($scope, facebook) {
-    facebook.login(function (accessToken) {
-        facebook.graph('nasa?fields=id,name,posts', function(results){
-            
-        }).then(function(response){
-        	console.log(response.posts.data);
-        	$scope.feed = response.posts.data;
+app.controller('FrontpageController', ['$http', '$scope', 'facebook', function($http, $scope, facebook) {
+    if (facebook.getLoginStatus(function(result){return result;})) {
+    	console.log('Already logged in.');
+    } else {
+    	facebook.login(function (accessToken) {
+            facebook.graph('nasa?fields=id,name,posts', function(results){
+                
+            }).then(function(response){
+            	$http.get('/spacegeek_angularjs/writeJSON').success(function(data){
+            		console.log('Wrote to JSON');
+            	});
+            	console.log(response.posts.data);
+            	$scope.feed = response;
+            });
         });
-    });
+    }
 }]);
+
+app.controller('TabController', function(){
+	this.tab = 0;
+	this.selectTab = function(setTab){
+		this.tab = setTab;
+	};
+	this.isSelected = function(checkTab){
+		return this.tab === checkTab;
+	};
+	this.notHome = function(){
+		return (this.tab > 0);
+	};
+});
 
 app.provider('facebook', function() {
     var fbReady = false;
