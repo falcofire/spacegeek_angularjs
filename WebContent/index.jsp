@@ -11,6 +11,7 @@
 		<title>SpaceGeek</title>
 	</head>
 	<body background="${pageContext.request.contextPath}/images/space.jpg" style="background-size:100% 100%; background-attachment:fixed;" />
+		<%@include file="/jsp/meta.jsp" %>
 		<br>
 		<div id='fb-root'></div>
 		<div class="spacegeek-main">
