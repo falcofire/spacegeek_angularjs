@@ -4,4 +4,42 @@
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  <display-name>SpaceGeek</display-name>
+    <servlet>
+        <servlet-name>spacegeek_angularjs</servlet-name>
+        <servlet-class>
+            org.springframework.web.servlet.DispatcherServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+    	<servlet-name>JsonWriter</servlet-name>
+    	<servlet-class>com.spacegeek.feeds.JsonWriter</servlet-class>
+    	<load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>spacegeek_angularjs</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.css</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.js</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.jpg</url-pattern>
+	</servlet-mapping>
+    <servlet-mapping>
+    	<servlet-name>JsonWriter</servlet-name>
+    	<url-pattern>/writeJson</url-pattern>
+   	</servlet-mapping>
+	<!-- Needed to identify favicon in Tomcat env -->
+	<mime-mapping>
+	    <extension>ico</extension>
+	    <mime-type>image/x-icon</mime-type>
+	</mime-mapping>
 </web-app>

@@ -15,7 +15,7 @@ app.controller('FrontpageController', ['$http', '$scope', 'facebook', function($
             facebook.graph('nasa?fields=id,name,posts', function(results){
                 
             }).then(function(response){
-            	$http.get('/spacegeek_angularjs/writeJSON').success(function(data){
+            	$http.post('/spacegeek_angularjs/writeJson').success(function(data){
             		console.log('Wrote to JSON');
             	});
             	console.log(response.posts.data);
