@@ -7,6 +7,14 @@
 		<script src="http://connect.facebook.net/en_US/all.js"></script>
 		<script src="js/spacegeek.js"></script>
 		<script>
+			$(document).ready(function(){
+				$('.img-responsive').on('click', function(e) {
+					alert('Clicked an image.');
+				    $("#modal-img").attr("src", this.src);
+				    $("#img-link").attr("href", this.src);
+				    $('#imgModal').modal('show');
+				});
+			});
 		</script>
 		<title>SpaceGeek</title>
 	</head>
@@ -24,30 +32,52 @@
 					<div class="container-fluid">
 						<div class="jumbotron topStories">
 							<div ng-controller="FrontpageController as frontCtrl" class="container-fluid" style="display: inline;">
-								<div ng-repeat="post in feed.posts.data">
-									<div class="feedElement">
-										<h2>{{feed.name}}</h2>
-										<p>{{post.message}}</p>
+								<div class="row">
+									<div ng-repeat="post in feed.posts.data">
+										<div class="clearfix" ng-if="$index % 3 == 0"></div>
+										<div class="col-md-4 col-md-offset-0">
+											<div class="container-fluid">
+												<div class="feedElement container">
+													Likes: {{post.likes.summary.total_count}}
+													<br/>Shares: {{post.shares.count}}
+													<p>{{post.message}}</p>
+													<img src={{post.full_picture}} class="img-responsive"/>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="panel" ng-show="tab.isSelected(1)">
-					
-				</div>
-				<div class="panel" ng-show="tab.isSelected(2)">
-				
-				</div>
-				<div class="panel" ng-show="tab.isSelected(3)">
-				
-				</div>
-				<div class="panel" ng-show="tab.isSelected(4)">
-				
-				</div>
-				<div class="panel" ng-show="tab.isSelected(5)">
-				
+				<div class="spacegeek-main" ng-hide="!tab.notHome()">
+					<div style="text-align:center">
+						<h2>
+							<font color="white">{{feed.name}} Stories</font><br> <br>
+						</h2>
+						<div class="container-fluid">
+							<div class="jumbotron topStories">
+								<div ng-controller="FrontpageController as frontCtrl" class="container-fluid" style="display: inline;">
+									<div class="row">
+										<div ng-repeat="post in feed.posts.data">
+											<div class="clearfix" ng-if="$index % 3 == 0"></div>
+											<div class="col-md-4 col-md-offset-0">
+												<div class="container-fluid">
+													<div class="feedElement container">
+														Likes: {{post.likes.summary.total_count}}
+														<br/>Shares: {{post.shares.count}}
+														<p>{{post.message}}</p>
+														<img src={{post.full_picture}} class="img-responsive"/>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

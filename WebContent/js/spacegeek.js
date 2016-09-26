@@ -12,23 +12,71 @@ app.controller('FrontpageController', ['$http', '$scope', 'facebook', function($
     	console.log('Already logged in.');
     } else {
     	facebook.login(function (accessToken) {
-            facebook.graph('nasa?fields=id,name,posts', function(results){
-                
+            facebook.graph('nasa?fields=id,name,posts{full_picture,message,picture}', function(results){
             }).then(function(response){
-            	$http.post('/spacegeek_angularjs/writeJson').success(function(data){
-            		console.log('Wrote to JSON');
+            	$http.post('/spacegeek_angularjs/writeJson', {name:'NASA', data:response}).success(function(data){
             	});
-            	console.log(response.posts.data);
-            	$scope.feed = response;
+            });
+            facebook.graph('nasajpl?fields=id,name,posts{full_picture,likes.summary(true).limit(0),message,picture,shares}', function(results){
+            }).then(function(response){
+            	$http.post('/spacegeek_angularjs/writeJson', {name:'NASAJPL', data:response}).success(function(data){
+            	});
+            });
+            facebook.graph('spacex?fields=id,name,posts{full_picture,likes.summary(true).limit(0),message,picture,shares}', function(results){
+            }).then(function(response){
+            	$http.post('/spacegeek_angularjs/writeJson', {name:'SpaceX', data:response}).success(function(data){
+            	});
+            });
+            facebook.graph('esa?fields=id,name,posts{full_picture,message,picture}', function(results){
+            }).then(function(response){
+            	$http.post('/spacegeek_angularjs/writeJson', {name:'ESA', data:response}).success(function(data){
+            	});
+            });
+            facebook.graph('iss?fields=id,name,posts{full_picture,message,picture}', function(results){
+            }).then(function(response){
+            	$http.post('/spacegeek_angularjs/writeJson', {name:'ISS', data:response}).success(function(data){
+            	});
             });
         });
     }
 }]);
 
-app.controller('TabController', function(){
+app.controller('TabController', ['$http', '$scope', function($http, $scope){
 	this.tab = 0;
 	this.selectTab = function(setTab){
 		this.tab = setTab;
+		switch(setTab) {
+			case 1: 
+	            $http.get('/spacegeek_angularjs/writeJson?name=SpaceX').success(function(results){
+	            	$scope.feed = results.data;
+	            });
+	            break;
+			case 2:
+	            $http.get('/spacegeek_angularjs/writeJson?name=ISS').success(function(results){
+	            	$scope.feed = results.data;
+	            });
+	            break;
+			case 3:
+				$http.get('/spacegeek_angularjs/writeJson?name=NASA').success(function(results){
+	            	$scope.feed = results.data;
+	            });
+	            break;
+			case 4:
+				$http.get('/spacegeek_angularjs/writeJson?name=NASAJPL').success(function(results){
+	            	$scope.feed = results.data;
+	            });
+	            break;
+			case 5:
+				$http.get('/spacegeek_angularjs/writeJson?name=ESA').success(function(results){
+	            	$scope.feed = results.data;
+	            });
+	            break;
+	        default:
+	        	$http.get('/spacegeek_angularjs/writeJson?name=NASA').success(function(results){
+	            	$scope.feed = results.data;
+	            });
+	            break;
+		}
 	};
 	this.isSelected = function(checkTab){
 		return this.tab === checkTab;
@@ -36,7 +84,7 @@ app.controller('TabController', function(){
 	this.notHome = function(){
 		return (this.tab > 0);
 	};
-});
+}]);
 
 app.provider('facebook', function() {
     var fbReady = false;
@@ -94,7 +142,6 @@ app.provider('facebook', function() {
                     setTimeout(function() {
                         self.$get()['getLoginStatus'](cb);
                     }, 100);
-                    console.log('fb not ready');
                     return;
                 }
                 FB.getLoginStatus(function(response) {
@@ -106,15 +153,12 @@ app.provider('facebook', function() {
                     setTimeout(function() {
                         self.$get()['login'](cb);
                     }, 100);
-                    console.log('fb not ready');
                     return;
                 }
                 FB.login(function(response) {
                     if (response.authResponse) {
                         access_token = FB.getAuthResponse()['accessToken'];
                         FB.api('/me', function(response) {
-                            console.log('Good to see you, ' + response.name
-                                    + '.');
                         });
                         self.auth = response.authResponse;
                         cb(access_token);
