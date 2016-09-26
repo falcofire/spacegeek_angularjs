@@ -33,7 +33,7 @@ public class JsonWriter extends HttpServlet{
 		while (scanner.hasNextLine()) {
 			sB.append(scanner.nextLine());
 		}
-		System.out.println("Retrieved" + name + "file.");
+		System.out.println("Retrieved " + name + " file.");
 		scanner.close();
 		response.getWriter().write(sB.toString());
 	}
