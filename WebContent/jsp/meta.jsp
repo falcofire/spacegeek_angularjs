@@ -1,10 +1,5 @@
 <html>
 <head>
-<link rel='stylesheet' href='css/bootstrap.min.css'>
-<link rel='stylesheet' href='css/bootstrap-theme.min.css'>
-<link rel='stylesheet' href='${pageContext.request.contextPath}/css/spacegeek.css'>
-<link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/favicon.ico" />
-<script src="js/spacegeek.js"></script>
 </head>
 <body>
 	<nav class="nav navbar-default navbar-fixed-top">
@@ -25,6 +20,11 @@
 	      			<li ng-class="{active:tab.isSelected(3)}"><a href ng-click="tab.selectTab(3)">NASA</a></li>
 	      			<li ng-class="{active:tab.isSelected(4)}"><a href ng-click="tab.selectTab(4)">JPL</a></li>
 	      			<li ng-class="{active:tab.isSelected(5)}"><a href ng-click="tab.selectTab(5)">ESA</a></li>
+			   		<li style="float: right;">
+			   			<button type="button" class="btn btn-primary" style="margin-top:5px;" ng-click="getFeeds(currentTab)">
+			   				<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+			   			</button>
+			   		</li>
 	      		</ul>
 	      	</div>
 		</div>

@@ -8,43 +8,55 @@ app.config(function(facebookProvider) {
 });
 
 app.controller('FrontpageController', ['$http', '$scope', 'facebook', function($http, $scope, facebook) {
-    if (facebook.getLoginStatus(function(result){return result;})) {
-    	console.log('Already logged in.');
-    } else {
-    	facebook.login(function (accessToken) {
-            facebook.graph('nasa?fields=id,name,posts{full_picture,message,picture}', function(results){
-            }).then(function(response){
-            	$http.post('/spacegeek_angularjs/writeJson', {name:'NASA', data:response}).success(function(data){
-            	});
-            });
-            facebook.graph('nasajpl?fields=id,name,posts{full_picture,likes.summary(true).limit(0),message,picture,shares}', function(results){
-            }).then(function(response){
-            	$http.post('/spacegeek_angularjs/writeJson', {name:'NASAJPL', data:response}).success(function(data){
-            	});
-            });
-            facebook.graph('spacex?fields=id,name,posts{full_picture,likes.summary(true).limit(0),message,picture,shares}', function(results){
-            }).then(function(response){
-            	$http.post('/spacegeek_angularjs/writeJson', {name:'SpaceX', data:response}).success(function(data){
-            	});
-            });
-            facebook.graph('esa?fields=id,name,posts{full_picture,message,picture}', function(results){
-            }).then(function(response){
-            	$http.post('/spacegeek_angularjs/writeJson', {name:'ESA', data:response}).success(function(data){
-            	});
-            });
-            facebook.graph('iss?fields=id,name,posts{full_picture,message,picture}', function(results){
-            }).then(function(response){
-            	$http.post('/spacegeek_angularjs/writeJson', {name:'ISS', data:response}).success(function(data){
-            	});
-            });
-        });
-    }
+	facebook.login(function(accessToken) {
+	    facebook.graph('nasa?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+	    }).then(function(response){
+	    	$http.post('/spacegeek_angularjs/writeJson', {name:'NASA', data:response}).success(function(data){
+	    	});
+	    });
+	    facebook.graph('nasajpl?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+	    }).then(function(response){
+	    	$http.post('/spacegeek_angularjs/writeJson', {name:'NASAJPL', data:response}).success(function(data){
+	    	});
+	    });
+	    facebook.graph('spacex?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+	    }).then(function(response){
+	    	$http.post('/spacegeek_angularjs/writeJson', {name:'SpaceX', data:response}).success(function(data){
+	    	});
+	    });
+	    facebook.graph('esa?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+	    }).then(function(response){
+	    	$http.post('/spacegeek_angularjs/writeJson', {name:'ESA', data:response}).success(function(data){
+	    	});
+	    });
+	    facebook.graph('iss?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+	    }).then(function(response){
+	    	$http.post('/spacegeek_angularjs/writeJson', {name:'ISS', data:response}).success(function(data){
+	    	});
+	    });
+	});
+	
+	$scope.imgClick = function(picture, link, source) {
+		if (link.includes('video')) {
+			$('#video').attr("src", source);
+    		$('#vidModal').modal('show');
+    		$("#vidModal").on('hidden.bs.modal', function () {
+        	    $('#video').attr("src", '');
+        	});
+		} else {
+			$("#modal-img").attr("src", picture);
+		    $("#img-link").attr("href", link);
+		    $('#imgModal').modal('show');
+		}
+	};
+	
 }]);
 
-app.controller('TabController', ['$http', '$scope', function($http, $scope){
+app.controller('TabController', ['$http', '$scope', '$window', 'facebook', function($http, $scope, $window, facebook){
 	this.tab = 0;
 	this.selectTab = function(setTab){
 		this.tab = setTab;
+		$scope.currentTab = setTab;
 		switch(setTab) {
 			case 1: 
 	            $http.get('/spacegeek_angularjs/writeJson?name=SpaceX').success(function(results){
@@ -83,6 +95,94 @@ app.controller('TabController', ['$http', '$scope', function($http, $scope){
 	};
 	this.notHome = function(){
 		return (this.tab > 0);
+	};
+	$scope.getFeeds = function getFeeds(currentTab) {
+		console.log('Getting new feeds: ' + currentTab);
+		$scope.currentTab = currentTab;
+		switch(currentTab) {
+			case 1: 
+				facebook.graph('spacex?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares}', function(results){
+			    }).then(function(response){
+			    	$http.post('/spacegeek_angularjs/writeJson', {name:'SpaceX', data:response}).success(function(data){
+			    	}).then(function successCallback(response) {
+			    		$http.get('/spacegeek_angularjs/writeJson?name=SpaceX').success(function(results){
+							$scope.feed = results.data;
+							console.log('Refreshed SpaceX feed.');
+						})	
+			    	}, function errorCallback(response) {
+			    		console.log('Could not refresh.')
+			    	});
+				});
+				break;
+			case 2:
+				facebook.graph('iss?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+			    }).then(function(response){
+			    	$http.post('/spacegeek_angularjs/writeJson', {name:'ISS', data:response}).success(function(data){
+			    	}).then(function successCallback(response) {
+			    		$http.get('/spacegeek_angularjs/writeJson?name=ISS').success(function(results){
+							$scope.feed = results.data;
+							console.log('Refreshed ISS feed.');
+						})	
+			    	}, function errorCallback(response) {
+			    		console.log('Could not refresh.')
+			    	});
+				});
+				break;
+			case 3:
+				facebook.graph('nasa?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+			    }).then(function(response){
+			    	$http.post('/spacegeek_angularjs/writeJson', {name:'NASA', data:response}).success(function(data){
+			    	}).then(function successCallback(response) {
+			    		$http.get('/spacegeek_angularjs/writeJson?name=NASA').success(function(results){
+							$scope.feed = results.data;
+							console.log('Refreshed NASA feed.');
+						})	
+			    	}, function errorCallback(response) {
+			    		console.log('Could not refresh.')
+			    	});
+				});
+				break;
+			case 4:
+				facebook.graph('nasajpl?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+			    }).then(function(response){
+			    	$http.post('/spacegeek_angularjs/writeJson', {name:'NASAJPL', data:response}).success(function(data){
+			    	}).then(function successCallback(response) {
+			    		$http.get('/spacegeek_angularjs/writeJson?name=NASAJPL').success(function(results){
+							$scope.feed = results.data;
+							console.log('Refreshed NASAJPL feed.');
+						})	
+			    	}, function errorCallback(response) {
+			    		console.log('Could not refresh.')
+			    	});
+				});
+				break;
+			case 5:
+				facebook.graph('esa?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+			    }).then(function(response){
+			    	$http.post('/spacegeek_angularjs/writeJson', {name:'ESA', data:response}).success(function(data){
+			    	}).then(function successCallback(response) {
+			    		$http.get('/spacegeek_angularjs/writeJson?name=ESA').success(function(results){
+							$scope.feed = results.data;
+							console.log('Refreshed ESA feed.');
+						})	
+			    	}, function errorCallback(response) {
+			    		console.log('Could not refresh.')
+			    	});
+			    });
+				
+				break;
+			default:
+				facebook.graph('nasa?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+			    }).then(function(response){
+			    	$http.post('/spacegeek_angularjs/writeJson', {name:'NASA', data:response}).success(function(data){
+			    	});
+			    });
+				$http.get('/spacegeek_angularjs/writeJson?name=NASA').success(function(results){
+					$scope.feed = results.data;
+					console.log('Refreshed NASA feed.');
+				});
+				break;
+		}
 	};
 }]);
 
@@ -181,4 +281,35 @@ app.provider('facebook', function() {
         }
     }
 });
+
+function getFeeds() {
+	console.log('Retrieving new feeds...');
+	var directive = {};
+	facebook.graph('nasa?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,picture,shares}', function(results){
+    }).then(function(response){
+    	$http.post('/spacegeek_angularjs/writeJson', {name:'NASA', data:response}).success(function(data){
+    	});
+    });
+    facebook.graph('nasajpl?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,picture,shares}', function(results){
+    }).then(function(response){
+    	$http.post('/spacegeek_angularjs/writeJson', {name:'NASAJPL', data:response}).success(function(data){
+    	});
+    });
+    facebook.graph('spacex?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,picture,shares}', function(results){
+    }).then(function(response){
+    	$http.post('/spacegeek_angularjs/writeJson', {name:'SpaceX', data:response}).success(function(data){
+    	});
+    });
+    facebook.graph('esa?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,picture,shares}', function(results){
+    }).then(function(response){
+    	$http.post('/spacegeek_angularjs/writeJson', {name:'ESA', data:response}).success(function(data){
+    	});
+    });
+    facebook.graph('iss?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,picture,shares}', function(results){
+    }).then(function(response){
+    	$http.post('/spacegeek_angularjs/writeJson', {name:'ISS', data:response}).success(function(data){
+    	});
+    });
+    return directive;
+}
 })();

@@ -23,9 +23,10 @@ body {
 
 .feedElement {
 	background:#F8F8F8;
-	border-style:solid;
 	border-color:#E7E7E7;
-	opacity: 0.8;
+	border-radius: 4px;
+	border-style:solid;
+	margin-bottom: 10px;
 	padding: 5px;
 }
 
@@ -37,6 +38,10 @@ body {
     margin-left: auto;
     margin-right: auto; 
     width: /*whatever width you want*/;
+}
+
+.jumbotron {
+	background: 0;
 }
 
 .mediaFilters {
