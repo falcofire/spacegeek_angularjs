@@ -13,8 +13,9 @@
 		<script src="${pageContext.request.contextPath}/js/spacegeek.js"></script>
 		<script>
 		</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
-	<body background="${pageContext.request.contextPath}/images/space.jpg" style="background-size:100% 100%; background-attachment:fixed;" />
+	<body background="${pageContext.request.contextPath}/images/space.jpg" style="background-size:cover; background-attachment:fixed; background-repeat: no-repeat;" />
 		<div ng-controller="TabController as tab">
 			<%@include file="/jsp/meta.jsp" %>
 			<%@include file="/jsp/imgModal.jsp"%>
@@ -76,8 +77,11 @@
 														<blockquote>
 															<p class="text-left" style="word-wrap: break-word;">{{post.message}}</p>
 														</blockquote>
-														<div id="photoId" ng-show="post.full_picture">
-															<img id="photoId" src={{post.full_picture}} class="img-responsive" ng-click="imgClick(post.full_picture,post.permalink_url,post.source)"/>
+														<div id="photoId" ng-show="post.full_picture" class="container">
+															<a href="#">
+																<img id="photoId" src={{post.full_picture}} class="img-responsive" ng-click="imgClick(post.full_picture,post.permalink_url,post.source)"/>
+																<span class="glyphicon glyphicon-play-circle" ng-show="post.permalink_url.includes('video')" style="font-size: 2.3em; padding-top:5px;"></span>
+															</a>
 														</div>
 													</div>
 												</div>

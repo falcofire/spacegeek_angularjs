@@ -74,7 +74,7 @@ public class JsonWriter extends HttpServlet{
 		try (FileWriter file = new FileWriter("C:\\Users\\Scholar\\git\\spacegeek_angularjs\\WebContent\\feeds\\" + name + ".JSON")) {
 			file.write(body);
 			file.close();
-			System.out.println("Successfully Copied " + name + " JSON Object to File...");
+			System.out.println("Successfully retreived " + name + " feed from Facebook...");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
