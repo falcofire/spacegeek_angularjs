@@ -34,6 +34,11 @@ app.controller('FrontpageController', ['$http', '$scope', 'facebook', function($
 	    	$http.post('/spacegeek_angularjs/writeJson', {name:'ISS', data:response}).success(function(data){
 	    	});
 	    });
+	    facebook.graph('jaxajapanaerospaceexplorationagency?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+	    }).then(function(response){
+	    	$http.post('/spacegeek_angularjs/writeJson', {name:'JAXA', data:response}).success(function(data){
+	    	});
+	    })
 	});
 	
 	$scope.imgClick = function(picture, link, source) {
@@ -83,6 +88,10 @@ app.controller('TabController', ['$http', '$scope', '$window', 'facebook', funct
 	            	$scope.feed = results.data;
 	            });
 	            break;
+			case 6:
+				$http.get('/spacegeek_angularjs/writeJson?name=JAXA').success(function(results){
+	            	$scope.feed = results.data;
+	            });
 	        default:
 	        	$http.get('/spacegeek_angularjs/writeJson?name=NASA').success(function(results){
 	            	$scope.feed = results.data;
@@ -169,7 +178,20 @@ app.controller('TabController', ['$http', '$scope', '$window', 'facebook', funct
 			    		console.log('Could not refresh.')
 			    	});
 			    });
-				
+				break;
+			case 6:
+				facebook.graph('jaxajapanaerospaceexplorationagency?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){
+			    }).then(function(response){
+			    	$http.post('/spacegeek_angularjs/writeJson', {name:'JAXA', data:response}).success(function(data){
+			    	}).then(function successCallback(response) {
+			    		$http.get('/spacegeek_angularjs/writeJson?name=JAXA').success(function(results){
+							$scope.feed = results.data;
+							console.log('Refreshed JAXA feed.');
+						})	
+			    	}, function errorCallback(response) {
+			    		console.log('Could not refresh.')
+			    	});
+			    });
 				break;
 			default:
 				facebook.graph('nasa?fields=id,name,posts{created_time,full_picture,likes.summary(true).limit(0),link,message,permalink_url,picture,shares,source}', function(results){

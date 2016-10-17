@@ -68,9 +68,9 @@ public class JsonWriter extends HttpServlet{
 	    }
 
 	    body = stringBuilder.toString();
-	    int start = body.indexOf("name:") + 10;
 	    int end = body.indexOf("data") - 3;
-		String name = body.substring(start,end);  
+		String name = body.substring(9,end);  
+		body = body.replace("’", "'");
 		try (FileWriter file = new FileWriter("C:\\Users\\Scholar\\git\\spacegeek_angularjs\\WebContent\\feeds\\" + name + ".JSON")) {
 			file.write(body);
 			file.close();

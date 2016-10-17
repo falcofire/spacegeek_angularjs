@@ -14,6 +14,7 @@
 		<script>
 		</script>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	</head>
 	<body background="${pageContext.request.contextPath}/images/space.jpg" style="background-size:cover; background-attachment:fixed; background-repeat: no-repeat;" />
 		<div ng-controller="TabController as tab">
@@ -78,7 +79,7 @@
 															<p class="text-left" style="word-wrap: break-word;">{{post.message}}</p>
 														</blockquote>
 														<div id="photoId" ng-show="post.full_picture" class="container">
-															<a href="#">
+															<a href="">
 																<img id="photoId" src={{post.full_picture}} class="img-responsive" ng-click="imgClick(post.full_picture,post.permalink_url,post.source)"/>
 																<span class="glyphicon glyphicon-play-circle" ng-show="post.permalink_url.includes('video')" style="font-size: 2.3em; padding-top:5px;"></span>
 															</a>
